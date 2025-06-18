@@ -15,7 +15,8 @@
       "Bash(docker compose:*)",
       "Bash(yarn workspace @timeblocker/backend:*)",
       "Bash(npm install:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(chmod:*)"
     ],
     "deny": []
   }

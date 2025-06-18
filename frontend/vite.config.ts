@@ -40,12 +40,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true
-      }
-    }
+    // Note: Proxy not needed when using direct API calls with dynamic URL detection
+    // The frontend will automatically detect and use the correct API URL
   },
   build: {
     outDir: 'dist',

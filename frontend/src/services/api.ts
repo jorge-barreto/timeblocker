@@ -1,7 +1,30 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+// Dynamic API URL detection for local network testing
+const getApiBaseUrl = () => {
+  // Use environment variable if set
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // For development: detect if we're accessing via IP address
+  const hostname = window.location.hostname;
+  
+  // If accessing via IP address (192.168.x.x, 10.x.x.x, etc.), use same IP for API
+  if (hostname.match(/^192\.168\.|^10\.|^172\.(1[6-9]|2\d|3[01])\./)) {
+    return `http://${hostname}:3000/api`;
+  }
+  
+  // Default to localhost for local development
+  return 'http://localhost:3000/api';
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
+// Debug logging for API URL
+console.log('API Base URL:', API_BASE_URL);
+console.log('Current hostname:', window.location.hostname);
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
