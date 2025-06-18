@@ -1,5 +1,6 @@
 export enum TaskStatus {
   PENDING = 'PENDING',
+  IN_PROGRESS = 'IN_PROGRESS',
   SCHEDULED = 'SCHEDULED',
   COMPLETED = 'COMPLETED'
 }
@@ -50,10 +51,12 @@ export interface Task {
   estimatedMinutes?: number;
   recurrence?: RecurrenceSettings;
   parentTask?: Task;
+  parentTaskId?: string;
   subtasks?: Task[];
-  totalMinutesWorked: number;
+  totalMinutesWorked?: number;
   createdAt: Date;
   updatedAt: Date;
+  _syncStatus?: 'pending' | 'synced' | 'error';
 }
 
 export interface TimeBlock {
@@ -66,6 +69,13 @@ export interface TimeBlock {
   notes?: string;
   notification?: NotificationSettings;
   task?: Task;
+  taskId?: string;
   createdAt: Date;
   updatedAt: Date;
+  _syncStatus?: 'pending' | 'synced' | 'error';
+}
+
+export interface AuthResponse {
+  user: User;
+  token: string;
 }

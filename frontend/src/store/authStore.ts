@@ -1,18 +1,13 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  timezone: string;
-}
+import { User } from '../types';
 
 interface AuthState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
   login: (user: User, token: string) => void;
+  setAuth: (user: User, token: string) => void;
   logout: () => void;
 }
 
@@ -22,18 +17,33 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       token: null,
       isAuthenticated: false,
-      login: (user, token) =>
+      login: (user, token) => {
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('auth_user', JSON.stringify(user));
         set({
           user,
           token,
           isAuthenticated: true,
-        }),
-      logout: () =>
+        });
+      },
+      setAuth: (user, token) => {
+        localStorage.setItem('auth_token', token);
+        localStorage.setItem('auth_user', JSON.stringify(user));
+        set({
+          user,
+          token,
+          isAuthenticated: true,
+        });
+      },
+      logout: () => {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('auth_user');
         set({
           user: null,
           token: null,
           isAuthenticated: false,
-        }),
+        });
+      },
     }),
     {
       name: 'auth-storage',

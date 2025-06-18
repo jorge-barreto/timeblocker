@@ -2,7 +2,7 @@ import { Typography, Button, Box, Card, CardContent, Alert } from '@mui/material
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../services/authService';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function Home() {
   const navigate = useNavigate();
@@ -10,8 +10,14 @@ export function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // Don't render if user is authenticated (will redirect)
   if (isAuthenticated) {
-    navigate('/dashboard');
     return null;
   }
 

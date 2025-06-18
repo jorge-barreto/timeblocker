@@ -1,24 +1,5 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-export interface LoginResponse {
-  user: {
-    id: string;
-    email: string;
-    name?: string;
-    timezone: string;
-  };
-  token: string;
-  isDemo?: boolean;
-}
+import { api } from './api';
+import { AuthResponse } from '../types';
 
 export interface RegisterData {
   email: string;
@@ -33,29 +14,22 @@ export interface LoginData {
 }
 
 export const authService = {
-  async register(data: RegisterData): Promise<LoginResponse> {
-    const response = await api.post('/api/auth/register', data);
+  async register(data: RegisterData): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>('/auth/register', data);
     return response.data;
   },
 
-  async login(data: LoginData): Promise<LoginResponse> {
-    const response = await api.post('/api/auth/login', data);
+  async login(data: LoginData): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>('/auth/login', data);
     return response.data;
   },
 
-  async loginDemo(): Promise<LoginResponse> {
-    const response = await api.post('/api/auth/demo');
+  async loginDemo(): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>('/auth/demo');
     return response.data;
   },
 
-  async updatePushSubscription(subscription: PushSubscription, token: string): Promise<void> {
-    await api.post('/api/auth/push-subscription', 
-      { subscription },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  async updatePushSubscription(subscription: PushSubscriptionJSON): Promise<void> {
+    await api.post('/auth/push-subscription', { subscription });
   },
 };
