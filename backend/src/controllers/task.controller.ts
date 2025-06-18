@@ -37,7 +37,7 @@ export class TaskController {
     body('priority').optional().isIn(Object.values(TaskPriority)),
     body('parentTaskId').optional().isUUID(),
     body('estimatedMinutes').optional().isInt({ min: 0 }),
-    body('deadline').optional().isISO8601(),
+    body('deadline').optional({ nullable: true }).isISO8601(),
     
     async (req: Request, res: Response) => {
       try {
