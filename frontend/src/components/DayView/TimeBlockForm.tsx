@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -47,6 +47,32 @@ export const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
     dayjs(timeBlock?.end || defaultEnd || roundToNearest15Minutes(new Date(Date.now() + 60 * 60 * 1000)))
   );
   const [taskId, setTaskId] = useState(timeBlock?.taskId || '');
+
+  // Reset form when modal closes or timeBlock changes
+  useEffect(() => {
+    if (!open) {
+      // Reset form fields when modal closes
+      setTitle('');
+      setNotes('');
+      setStart(dayjs(defaultStart || roundToNearest15Minutes(new Date())));
+      setEnd(dayjs(defaultEnd || roundToNearest15Minutes(new Date(Date.now() + 60 * 60 * 1000))));
+      setTaskId('');
+    } else if (timeBlock) {
+      // Populate form with timeBlock data when editing
+      setTitle(timeBlock.title || '');
+      setNotes(timeBlock.notes || '');
+      setStart(dayjs(timeBlock.start));
+      setEnd(dayjs(timeBlock.end));
+      setTaskId(timeBlock.taskId || '');
+    } else {
+      // Reset to defaults when creating new time block
+      setTitle('');
+      setNotes('');
+      setStart(dayjs(defaultStart || roundToNearest15Minutes(new Date())));
+      setEnd(dayjs(defaultEnd || roundToNearest15Minutes(new Date(Date.now() + 60 * 60 * 1000))));
+      setTaskId('');
+    }
+  }, [open, timeBlock, defaultStart, defaultEnd]);
 
   const handleSubmit = async () => {
     const roundedStart = roundToNearest15Minutes(start.toDate());

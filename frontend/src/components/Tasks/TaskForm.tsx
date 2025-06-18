@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -37,6 +37,33 @@ export const TaskForm: React.FC<TaskFormProps> = ({ open, onClose, task, parentT
   const [isRecurring, setIsRecurring] = useState(!!task?.recurrence);
   const [recurrenceType, setRecurrenceType] = useState(task?.recurrence?.type || RecurrenceType.DAILY);
   const [recurrenceInterval, setRecurrenceInterval] = useState(task?.recurrence?.interval?.toString() || '1');
+
+  // Reset form when modal closes or task changes
+  useEffect(() => {
+    if (!open) {
+      // Reset form fields when modal closes
+      setTitle('');
+      setNotes('');
+      setPriority(TaskPriority.MEDIUM);
+      setCategory('');
+      setDeadline(null);
+      setEstimatedMinutes('');
+      setIsRecurring(false);
+      setRecurrenceType(RecurrenceType.DAILY);
+      setRecurrenceInterval('1');
+    } else if (task) {
+      // Populate form with task data when editing
+      setTitle(task.title || '');
+      setNotes(task.notes || '');
+      setPriority(task.priority || TaskPriority.MEDIUM);
+      setCategory(task.category || '');
+      setDeadline(task.deadline ? dayjs(task.deadline) : null);
+      setEstimatedMinutes(task.estimatedMinutes?.toString() || '');
+      setIsRecurring(!!task.recurrence);
+      setRecurrenceType(task.recurrence?.type || RecurrenceType.DAILY);
+      setRecurrenceInterval(task.recurrence?.interval?.toString() || '1');
+    }
+  }, [open, task]);
 
   const handleSubmit = async () => {
     const taskData: any = {
