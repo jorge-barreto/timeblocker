@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, showSuccessToast } from './api';
 import { TimeBlock } from '../types';
 import dayjs from 'dayjs';
 
@@ -23,7 +23,7 @@ export const timeBlockService = {
       start: block.start.toISOString(),
       end: block.end.toISOString(),
     });
-    return {
+    const createdBlock = {
       ...response.data,
       start: new Date(response.data.start),
       end: new Date(response.data.end),
@@ -31,6 +31,8 @@ export const timeBlockService = {
       createdAt: new Date(response.data.createdAt),
       updatedAt: new Date(response.data.updatedAt),
     };
+    showSuccessToast('Time block created successfully!');
+    return createdBlock;
   },
 
   async updateTimeBlock(id: string, updates: Partial<TimeBlock>): Promise<TimeBlock> {
@@ -40,7 +42,7 @@ export const timeBlockService = {
     if (updates.actualEnd) payload.actualEnd = updates.actualEnd.toISOString() as any;
 
     const response = await api.patch<TimeBlock>(`/timeblocks/${id}`, payload);
-    return {
+    const updatedBlock = {
       ...response.data,
       start: new Date(response.data.start),
       end: new Date(response.data.end),
@@ -48,9 +50,12 @@ export const timeBlockService = {
       createdAt: new Date(response.data.createdAt),
       updatedAt: new Date(response.data.updatedAt),
     };
+    showSuccessToast('Time block updated successfully!');
+    return updatedBlock;
   },
 
   async deleteTimeBlock(id: string): Promise<void> {
     await api.delete(`/timeblocks/${id}`);
+    showSuccessToast('Time block deleted successfully!');
   },
 };

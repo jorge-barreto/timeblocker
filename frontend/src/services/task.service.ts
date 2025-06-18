@@ -1,4 +1,4 @@
-import { api } from './api';
+import { api, showSuccessToast } from './api';
 import { Task, TaskStatus, TaskPriority } from '../types';
 
 export const taskService = {
@@ -18,25 +18,30 @@ export const taskService = {
 
   async createTask(task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>): Promise<Task> {
     const response = await api.post<Task>('/tasks', task);
-    return {
+    const createdTask = {
       ...response.data,
       createdAt: new Date(response.data.createdAt),
       updatedAt: new Date(response.data.updatedAt),
       deadline: response.data.deadline ? new Date(response.data.deadline) : undefined,
     };
+    showSuccessToast('Task created successfully!');
+    return createdTask;
   },
 
   async updateTask(id: string, updates: Partial<Task>): Promise<Task> {
     const response = await api.patch<Task>(`/tasks/${id}`, updates);
-    return {
+    const updatedTask = {
       ...response.data,
       createdAt: new Date(response.data.createdAt),
       updatedAt: new Date(response.data.updatedAt),
       deadline: response.data.deadline ? new Date(response.data.deadline) : undefined,
     };
+    showSuccessToast('Task updated successfully!');
+    return updatedTask;
   },
 
   async deleteTask(id: string): Promise<void> {
     await api.delete(`/tasks/${id}`);
+    showSuccessToast('Task deleted successfully!');
   },
 };

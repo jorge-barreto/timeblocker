@@ -45,7 +45,7 @@ export class TimeBlockController {
           }
         ]
       }, {
-        populate: ['task'],
+        populate: ['task', 'task.timeBlocks'],
         orderBy: { start: 'ASC' }
       });
 
