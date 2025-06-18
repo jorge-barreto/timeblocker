@@ -34,13 +34,7 @@ export function Dashboard() {
     fetchDayView(new Date());
   }, [fetchTasks, fetchDayView]);
 
-  const todayBlocks = timeBlocks.filter(block => {
-    const today = new Date();
-    const blockDate = new Date(block.start);
-    return blockDate.toDateString() === today.toDateString();
-  });
-
-  const pendingTasks = tasks.filter(task => task.status === TaskStatus.PENDING).slice(0, 5);
+  const pendingTasks = tasks.filter(task => task.status === TaskStatus.PENDING).slice(0, 8);
   const completedToday = tasks.filter(task => 
     task.status === TaskStatus.COMPLETED && 
     new Date(task.updatedAt).toDateString() === new Date().toDateString()
@@ -50,10 +44,11 @@ export function Dashboard() {
     .filter(task => task.status !== TaskStatus.COMPLETED)
     .reduce((sum, task) => sum + (task.estimatedMinutes || 0), 0);
 
-  const upcomingBlocks = todayBlocks
-    .filter(block => new Date(block.start) > new Date())
-    .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())
-    .slice(0, 3);
+  const todayBlocks = timeBlocks.filter(block => {
+    const today = new Date();
+    const blockDate = new Date(block.start);
+    return blockDate.toDateString() === today.toDateString();
+  });
 
   const handleTaskToggle = (taskId: string, currentStatus: TaskStatus) => {
     const newStatus = currentStatus === TaskStatus.COMPLETED ? TaskStatus.PENDING : TaskStatus.COMPLETED;
@@ -118,47 +113,8 @@ export function Dashboard() {
       </Grid>
 
       <Grid container spacing={3}>
-        {/* Upcoming Time Blocks */}
-        <Grid item xs={12} md={6}>
-          <Paper elevation={2} sx={{ p: 3, height: 400 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-              <Typography variant="h6">Upcoming Time Blocks</Typography>
-              <Button 
-                size="small" 
-                startIcon={<Add />}
-                onClick={() => setShowTimeBlockForm(true)}
-              >
-                Add Block
-              </Button>
-            </Box>
-            
-            {upcomingBlocks.length === 0 ? (
-              <Typography color="text.secondary">No upcoming time blocks for today</Typography>
-            ) : (
-              <List>
-                {upcomingBlocks.map((block) => (
-                  <ListItem key={block.id} divider>
-                    <ListItemText
-                      primary={block.title}
-                      secondary={`${formatTime(block.start)} - ${formatTime(block.end)}`}
-                    />
-                    {block.task && (
-                      <Chip 
-                        size="small" 
-                        label={block.task.title} 
-                        color="primary" 
-                        variant="outlined" 
-                      />
-                    )}
-                  </ListItem>
-                ))}
-              </List>
-            )}
-          </Paper>
-        </Grid>
-        
-        {/* Recent Tasks */}
-        <Grid item xs={12} md={6}>
+        {/* Pending Tasks */}
+        <Grid item xs={12} md={8}>
           <Paper elevation={2} sx={{ p: 3, height: 400 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6">Pending Tasks</Typography>
@@ -198,6 +154,64 @@ export function Dashboard() {
                 ))}
               </List>
             )}
+          </Paper>
+        </Grid>
+        
+        {/* Quick Actions & Today's Summary */}
+        <Grid item xs={12} md={4}>
+          <Paper elevation={2} sx={{ p: 3, height: 400 }}>
+            <Typography variant="h6" gutterBottom>
+              Today's Schedule
+            </Typography>
+            
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="body2" color="text.secondary" gutterBottom>
+                Time blocks scheduled: {todayBlocks.length}
+              </Typography>
+              
+              {todayBlocks.length > 0 && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Next up:
+                  </Typography>
+                  {(() => {
+                    const nextBlock = todayBlocks
+                      .filter(block => new Date(block.start) > new Date())
+                      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())[0];
+                    
+                    return nextBlock ? (
+                      <Typography variant="body2" sx={{ mt: 0.5 }}>
+                        {nextBlock.title} at {formatTime(nextBlock.start)}
+                      </Typography>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        No more blocks today
+                      </Typography>
+                    );
+                  })()}
+                </Box>
+              )}
+            </Box>
+            
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Button
+                variant="outlined"
+                startIcon={<Add />}
+                onClick={() => setShowTaskForm(true)}
+                fullWidth
+              >
+                Add Task
+              </Button>
+              
+              <Button
+                variant="outlined"
+                startIcon={<Schedule />}
+                onClick={() => setShowTimeBlockForm(true)}
+                fullWidth
+              >
+                Add Time Block
+              </Button>
+            </Box>
           </Paper>
         </Grid>
       </Grid>
