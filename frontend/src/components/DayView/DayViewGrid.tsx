@@ -1,19 +1,32 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Paper, Typography, IconButton, Button } from '@mui/material';
-import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { Box, Paper, Typography, IconButton, Button, Fab } from '@mui/material';
+import { ChevronLeft, ChevronRight, Add } from '@mui/icons-material';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
 import dayjs from 'dayjs';
 import { TimeBlock } from './TimeBlock';
 import { TimeSlot } from './TimeSlot';
+import { TimeBlockForm } from './TimeBlockForm';
 import { useTimeBlockStore } from '../../store/timeblock.store';
 import { TimeBlock as TimeBlockType } from '../../types';
 
 const HOURS = Array.from({ length: 18 }, (_, i) => i + 6); // 6 AM to 11 PM
 const MINUTES = [0, 15, 30, 45];
 
+interface DragSelection {
+  startHour: number;
+  startMinute: number;
+  endHour: number;
+  endMinute: number;
+}
+
 export const DayViewGrid: React.FC = () => {
   const { timeBlocks, selectedDate, setSelectedDate, updateTimeBlock, fetchDayView } = useTimeBlockStore();
   const [draggedBlock, setDraggedBlock] = useState<TimeBlockType | null>(null);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const [dragSelection, setDragSelection] = useState<DragSelection | null>(null);
+  const [showTimeBlockForm, setShowTimeBlockForm] = useState(false);
+  const [newBlockStart, setNewBlockStart] = useState<Date | undefined>();
+  const [newBlockEnd, setNewBlockEnd] = useState<Date | undefined>();
   const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -54,6 +67,96 @@ export const DayViewGrid: React.FC = () => {
   const handleNextDay = () => setSelectedDate(dayjs(selectedDate).add(1, 'day').toDate());
   const handleToday = () => setSelectedDate(new Date());
 
+  // Drag-to-create functionality (mouse and touch)
+  const handleSelectionStart = (hour: number, minute: number) => {
+    setIsSelecting(true);
+    setDragSelection({
+      startHour: hour,
+      startMinute: minute,
+      endHour: hour,
+      endMinute: minute + 15, // Default to 15-minute minimum
+    });
+  };
+
+  const handleSelectionMove = (hour: number, minute: number) => {
+    if (isSelecting && dragSelection) {
+      const newEndHour = hour;
+      const newEndMinute = minute + 15; // Always include the current slot
+      
+      // Ensure end is after start
+      const startTime = dragSelection.startHour * 60 + dragSelection.startMinute;
+      const endTime = newEndHour * 60 + newEndMinute;
+      
+      if (endTime > startTime) {
+        setDragSelection({
+          ...dragSelection,
+          endHour: newEndHour,
+          endMinute: newEndMinute,
+        });
+      }
+    }
+  };
+
+  const handleSelectionEnd = () => {
+    if (isSelecting && dragSelection) {
+      // Create time block with selected range
+      const startDate = dayjs(selectedDate)
+        .hour(dragSelection.startHour)
+        .minute(dragSelection.startMinute)
+        .toDate();
+      const endDate = dayjs(selectedDate)
+        .hour(dragSelection.endHour)
+        .minute(dragSelection.endMinute)
+        .toDate();
+
+      setNewBlockStart(startDate);
+      setNewBlockEnd(endDate);
+      setShowTimeBlockForm(true);
+    }
+    
+    setIsSelecting(false);
+    setDragSelection(null);
+  };
+
+  // Touch event handlers for mobile
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isSelecting) return;
+    
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    const timeSlot = element?.closest('[data-time-slot]');
+    
+    if (timeSlot) {
+      const hour = parseInt(timeSlot.getAttribute('data-hour') || '0');
+      const minute = parseInt(timeSlot.getAttribute('data-minute') || '0');
+      handleSelectionMove(hour, minute);
+    }
+  };
+
+  const handleAddTimeBlock = () => {
+    // Open form with current time defaults
+    const now = new Date();
+    const startTime = dayjs(selectedDate)
+      .hour(now.getHours())
+      .minute(Math.floor(now.getMinutes() / 15) * 15)
+      .toDate();
+    const endTime = dayjs(startTime).add(1, 'hour').toDate();
+    
+    setNewBlockStart(startTime);
+    setNewBlockEnd(endTime);
+    setShowTimeBlockForm(true);
+  };
+
+  const isSlotInSelection = (hour: number, minute: number) => {
+    if (!dragSelection) return false;
+    
+    const slotTime = hour * 60 + minute;
+    const startTime = dragSelection.startHour * 60 + dragSelection.startMinute;
+    const endTime = dragSelection.endHour * 60 + dragSelection.endMinute;
+    
+    return slotTime >= startTime && slotTime < endTime;
+  };
+
   const getBlockPosition = (block: TimeBlockType) => {
     const startHour = block.start.getHours();
     const startMinute = block.start.getMinutes();
@@ -88,7 +191,12 @@ export const DayViewGrid: React.FC = () => {
       {/* Grid */}
       <Paper sx={{ flex: 1, overflow: 'auto', position: 'relative', mx: 2, mb: 2 }}>
         <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
-          <Box ref={gridRef} sx={{ position: 'relative', minHeight: '1080px' }}>
+          <Box 
+            ref={gridRef} 
+            sx={{ position: 'relative', minHeight: '1080px' }}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleSelectionEnd}
+          >
             {/* Time slots */}
             {HOURS.map(hour => (
               <Box key={hour}>
@@ -98,6 +206,11 @@ export const DayViewGrid: React.FC = () => {
                     hour={hour}
                     minute={minute}
                     date={selectedDate}
+                    onSelectionStart={() => handleSelectionStart(hour, minute)}
+                    onSelectionMove={() => handleSelectionMove(hour, minute)}
+                    onSelectionEnd={handleSelectionEnd}
+                    isSelected={isSlotInSelection(hour, minute)}
+                    isSelecting={isSelecting}
                   />
                 ))}
               </Box>
@@ -150,6 +263,32 @@ export const DayViewGrid: React.FC = () => {
           </DragOverlay>
         </DndContext>
       </Paper>
+
+      {/* Floating Add Button */}
+      <Fab
+        color="primary"
+        sx={{
+          position: 'fixed',
+          bottom: 16,
+          right: 16,
+          zIndex: 1000,
+        }}
+        onClick={handleAddTimeBlock}
+      >
+        <Add />
+      </Fab>
+
+      {/* Time Block Form */}
+      <TimeBlockForm
+        open={showTimeBlockForm}
+        onClose={() => {
+          setShowTimeBlockForm(false);
+          setNewBlockStart(undefined);
+          setNewBlockEnd(undefined);
+        }}
+        defaultStart={newBlockStart}
+        defaultEnd={newBlockEnd}
+      />
     </Box>
   );
 };
