@@ -5,8 +5,12 @@ import { Task } from '../entities/Task';
 import { User } from '../entities/User';
 import { NotificationService } from '../services/notification.service';
 import { body, validationResult } from 'express-validator';
-import { startOfDay, endOfDay } from 'date-fns';
-import { zonedTimeToUtc } from 'date-fns-tz';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export class TimeBlockController {
   constructor(private em: EntityManager) {}
@@ -26,9 +30,9 @@ export class TimeBlockController {
       }
 
       // Convert user's local date to UTC range
-      const userDate = new Date(date);
-      const dayStart = zonedTimeToUtc(startOfDay(userDate), user.timezone);
-      const dayEnd = zonedTimeToUtc(endOfDay(userDate), user.timezone);
+      const userDate = dayjs(date);
+      const dayStart = userDate.tz(user.timezone).startOf('day').utc().toDate();
+      const dayEnd = userDate.tz(user.timezone).endOf('day').utc().toDate();
 
       const timeBlocks = await this.em.find(TimeBlock, {
         user: userId,

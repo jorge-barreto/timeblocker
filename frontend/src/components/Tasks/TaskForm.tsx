@@ -15,6 +15,7 @@ import {
   Switch,
 } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
 import { TaskPriority, RecurrenceType, Task } from '../../types';
 import { useTaskStore } from '../../store/task.store';
 
@@ -31,7 +32,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({ open, onClose, task, parentT
   const [notes, setNotes] = useState(task?.notes || '');
   const [priority, setPriority] = useState(task?.priority || TaskPriority.MEDIUM);
   const [category, setCategory] = useState(task?.category || '');
-  const [deadline, setDeadline] = useState<Date | null>(task?.deadline || null);
+  const [deadline, setDeadline] = useState<Dayjs | null>(task?.deadline ? dayjs(task.deadline) : null);
   const [estimatedMinutes, setEstimatedMinutes] = useState(task?.estimatedMinutes?.toString() || '');
   const [isRecurring, setIsRecurring] = useState(!!task?.recurrence);
   const [recurrenceType, setRecurrenceType] = useState(task?.recurrence?.type || RecurrenceType.DAILY);
@@ -43,7 +44,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({ open, onClose, task, parentT
       notes,
       priority,
       category,
-      deadline,
+      deadline: deadline?.toDate() || null,
       estimatedMinutes: estimatedMinutes ? parseInt(estimatedMinutes) : undefined,
       parentTaskId,
     };
@@ -116,7 +117,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({ open, onClose, task, parentT
           <DateTimePicker
             label="Deadline"
             value={deadline}
-            onChange={setDeadline}
+            onChange={(newValue) => setDeadline(newValue)}
             slotProps={{ textField: { fullWidth: true } }}
           />
 

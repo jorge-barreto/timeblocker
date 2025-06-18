@@ -2,8 +2,12 @@ import webpush from 'web-push';
 import { User } from '../entities/User';
 import { TimeBlock } from '../entities/TimeBlock';
 import { EntityManager } from '@mikro-orm/core';
-import { format } from 'date-fns';
-import { utcToZonedTime } from 'date-fns-tz';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 import { config } from '../config/env.config';
 
 export class NotificationService {
@@ -49,8 +53,8 @@ export class NotificationService {
     const notificationTime = new Date(timeBlock.start.getTime() - minutesBefore * 60000);
     
     // Convert to user's timezone for display
-    const userTime = utcToZonedTime(timeBlock.start, user.timezone);
-    const formattedTime = format(userTime, 'h:mm a');
+    const userTime = dayjs(timeBlock.start).tz(user.timezone);
+    const formattedTime = userTime.format('h:mm A');
 
     const title = minutesBefore > 0
       ? `Upcoming: ${timeBlock.title}`

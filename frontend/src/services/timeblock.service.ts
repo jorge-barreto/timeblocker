@@ -1,11 +1,11 @@
 import { api } from './api';
 import { TimeBlock } from '../types';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 
 export const timeBlockService = {
   async getDayView(date: Date): Promise<TimeBlock[]> {
     const response = await api.get<TimeBlock[]>('/day-view', {
-      params: { date: format(date, 'yyyy-MM-dd') },
+      params: { date: dayjs(date).format('YYYY-MM-DD') },
     });
     return response.data.map(block => ({
       ...block,

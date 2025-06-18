@@ -5,7 +5,7 @@ import { Task } from '../src/entities/Task';
 import { TimeBlock } from '../src/entities/TimeBlock';
 import { AuthService } from '../src/services/auth.service';
 import { TaskStatus, TaskPriority } from '../src/types';
-import { addHours, addDays, startOfDay, addMinutes } from 'date-fns';
+import dayjs from 'dayjs';
 
 export class DemoSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
@@ -36,9 +36,9 @@ export class DemoSeeder extends Seeder {
   }
 
   private async createDemoData(em: EntityManager, user: User): Promise<void> {
-    const today = startOfDay(new Date());
-    const tomorrow = addDays(today, 1);
-    const nextWeek = addDays(today, 7);
+    const today = dayjs().startOf('day').toDate();
+    const tomorrow = dayjs().add(1, 'day').startOf('day').toDate();
+    const nextWeek = dayjs().add(7, 'day').startOf('day').toDate();
 
     console.log('Creating demo tasks...');
 
@@ -49,7 +49,7 @@ export class DemoSeeder extends Seeder {
       notes: 'Complete product launch preparation for Q4 release',
       priority: TaskPriority.HIGH,
       category: 'Work',
-      deadline: addDays(today, 14),
+      deadline: dayjs(today).add(14, 'day').toDate(),
       estimatedMinutes: 480,
       status: TaskStatus.IN_PROGRESS,
     });
@@ -107,7 +107,7 @@ export class DemoSeeder extends Seeder {
       notes: 'Review prototype with key stakeholders',
       priority: TaskPriority.HIGH,
       category: 'Work',
-      deadline: addDays(today, 2),
+      deadline: dayjs(today).add(2, 'day').toDate(),
       estimatedMinutes: 60,
       status: TaskStatus.SCHEDULED,
     });
@@ -165,8 +165,8 @@ export class DemoSeeder extends Seeder {
       user,
       task: workoutTask,
       title: 'Morning workout routine',
-      start: addHours(today, 7),
-      end: addHours(today, 8),
+      start: dayjs(today).add(7, 'hour').toDate(),
+      end: dayjs(today).add(8, 'hour').toDate(),
       category: 'Health',
       notes: 'Cardio + strength training',
       notification: { enabled: true, minutesBefore: 10 },
@@ -176,19 +176,19 @@ export class DemoSeeder extends Seeder {
       user,
       task: meetingPrep,
       title: 'Team Standup',
-      start: addHours(today, 9),
-      end: addMinutes(addHours(today, 9), 30),
+      start: dayjs(today).add(9, 'hour').toDate(),
+      end: dayjs(today).add(9, 'hour').add(30, 'minute').toDate(),
       category: 'Work',
       notification: { enabled: true, minutesBefore: 5 },
-      actualEnd: addMinutes(addHours(today, 9), 25), // Completed early
+      actualEnd: dayjs(today).add(9, 'hour').add(25, 'minute').toDate(), // Completed early
     });
 
     const emailTime = em.create(TimeBlock, {
       user,
       task: emailTask,
       title: 'Process emails',
-      start: addMinutes(addHours(today, 9), 30),
-      end: addHours(today, 10),
+      start: dayjs(today).add(9, 'hour').add(30, 'minute').toDate(),
+      end: dayjs(today).add(10, 'hour').toDate(),
       category: 'Admin',
     });
 
@@ -196,8 +196,8 @@ export class DemoSeeder extends Seeder {
       user,
       task: marketingPlan,
       title: 'Marketing campaign planning',
-      start: addHours(today, 10),
-      end: addHours(today, 12),
+      start: dayjs(today).add(10, 'hour').toDate(),
+      end: dayjs(today).add(12, 'hour').toDate(),
       category: 'Work',
       notes: 'Deep work - no interruptions',
     });
@@ -205,8 +205,8 @@ export class DemoSeeder extends Seeder {
     const lunchBreak = em.create(TimeBlock, {
       user,
       title: 'Lunch break',
-      start: addHours(today, 12),
-      end: addHours(today, 13),
+      start: dayjs(today).add(12, 'hour').toDate(),
+      end: dayjs(today).add(13, 'hour').toDate(),
       category: 'Break',
     });
 
@@ -214,8 +214,8 @@ export class DemoSeeder extends Seeder {
       user,
       task: clientCall,
       title: 'Client feedback session',
-      start: addHours(today, 14),
-      end: addHours(today, 15),
+      start: dayjs(today).add(14, 'hour').toDate(),
+      end: dayjs(today).add(15, 'hour').toDate(),
       category: 'Work',
       notification: { enabled: true, minutesBefore: 15 },
     });
@@ -224,8 +224,8 @@ export class DemoSeeder extends Seeder {
       user,
       task: testingPlan,
       title: 'QA Testing Session',
-      start: addMinutes(addHours(today, 15), 15),
-      end: addMinutes(addHours(today, 16), 45),
+      start: dayjs(today).add(15, 'hour').add(15, 'minute').toDate(),
+      end: dayjs(today).add(16, 'hour').add(45, 'minute').toDate(),
       category: 'Work',
     });
 
@@ -233,8 +233,8 @@ export class DemoSeeder extends Seeder {
       user,
       task: learningTask,
       title: 'TypeScript Learning',
-      start: addHours(today, 17),
-      end: addMinutes(addHours(today, 18), 30),
+      start: dayjs(today).add(17, 'hour').toDate(),
+      end: dayjs(today).add(18, 'hour').add(30, 'minute').toDate(),
       category: 'Learning',
     });
 
@@ -242,16 +242,16 @@ export class DemoSeeder extends Seeder {
     const tomorrowWorkout = em.create(TimeBlock, {
       user,
       title: 'Morning run',
-      start: addMinutes(addHours(tomorrow, 6), 30),
-      end: addMinutes(addHours(tomorrow, 7), 30),
+      start: dayjs(tomorrow).add(6, 'hour').add(30, 'minute').toDate(),
+      end: dayjs(tomorrow).add(7, 'hour').add(30, 'minute').toDate(),
       category: 'Health',
     });
 
     const planningTime = em.create(TimeBlock, {
       user,
       title: 'Daily planning & review',
-      start: addHours(tomorrow, 9),
-      end: addMinutes(addHours(tomorrow, 9), 30),
+      start: dayjs(tomorrow).add(9, 'hour').toDate(),
+      end: dayjs(tomorrow).add(9, 'hour').add(30, 'minute').toDate(),
       category: 'Planning',
       notification: { enabled: true, minutesBefore: 0 },
     });
@@ -260,8 +260,8 @@ export class DemoSeeder extends Seeder {
       user,
       task: personalTask,
       title: 'Vacation research',
-      start: addHours(tomorrow, 10),
-      end: addMinutes(addHours(tomorrow, 11), 30),
+      start: dayjs(tomorrow).add(10, 'hour').toDate(),
+      end: dayjs(tomorrow).add(11, 'hour').add(30, 'minute').toDate(),
       category: 'Personal',
     });
 
@@ -269,8 +269,8 @@ export class DemoSeeder extends Seeder {
       user,
       task: workProject,
       title: 'Q4 Launch Progress Review',
-      start: addHours(tomorrow, 14),
-      end: addHours(tomorrow, 16),
+      start: dayjs(tomorrow).add(14, 'hour').toDate(),
+      end: dayjs(tomorrow).add(16, 'hour').toDate(),
       category: 'Work',
     });
 

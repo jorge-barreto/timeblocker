@@ -25,7 +25,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { Task, TaskStatus, TaskPriority } from '../../types';
 import { useTaskStore } from '../../store/task.store';
 import { TaskForm } from './TaskForm';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 
 interface TaskItemProps {
   task: Task;
@@ -114,8 +114,8 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, level }) => {
                 <Chip
                   size="small"
                   icon={<Schedule />}
-                  label={format(task.deadline, 'MMM d')}
-                  color={new Date(task.deadline) < new Date() ? 'error' : 'default'}
+                  label={dayjs(task.deadline).format('MMM D')}
+                  color={dayjs(task.deadline).isBefore(dayjs()) ? 'error' : 'default'}
                 />
               )}
               {task.recurrence && (

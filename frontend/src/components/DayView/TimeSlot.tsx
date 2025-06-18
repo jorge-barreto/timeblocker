@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useDroppable } from '@dnd-kit/core';
-import { format, setHours, setMinutes } from 'date-fns';
+import dayjs from 'dayjs';
 
 interface TimeSlotProps {
   hour: number;
@@ -10,7 +10,7 @@ interface TimeSlotProps {
 }
 
 export const TimeSlot: React.FC<TimeSlotProps> = ({ hour, minute, date }) => {
-  const time = setMinutes(setHours(date, hour), minute);
+  const time = dayjs(date).hour(hour).minute(minute);
   const id = `${hour}-${minute}`;
   
   const { isOver, setNodeRef } = useDroppable({ id });
@@ -40,7 +40,7 @@ export const TimeSlot: React.FC<TimeSlotProps> = ({ hour, minute, date }) => {
             color: 'text.secondary',
           }}
         >
-          {format(time, 'h:mm a')}
+          {time.format('h:mm A')}
         </Typography>
       )}
     </Box>

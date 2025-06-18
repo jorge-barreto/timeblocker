@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Typography, IconButton, Menu, MenuItem, Chip } from '@mui/material';
 import { MoreVert, CheckCircle, AccessTime } from '@mui/icons-material';
 import { useDraggable } from '@dnd-kit/core';
-import { format } from 'date-fns';
+import dayjs from 'dayjs';
 import { TimeBlock as TimeBlockType, TaskPriority } from '../../types';
 import { useTimeBlockStore } from '../../store/timeblock.store';
 
@@ -107,7 +107,7 @@ export const TimeBlock: React.FC<TimeBlockProps> = ({ block, style }) => {
       </Box>
 
       <Typography variant="caption" sx={{ mb: 0.5 }}>
-        {format(block.start, 'h:mm a')} - {format(block.end, 'h:mm a')}
+        {dayjs(block.start).format('h:mm A')} - {dayjs(block.end).format('h:mm A')}
       </Typography>
 
       {block.notes && (

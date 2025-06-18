@@ -32,7 +32,7 @@ This is a monorepo using Yarn workspaces with the following structure:
 - Vite as build tool
 - vite-plugin-pwa with Workbox for PWA features
 - IndexedDB (via idb) for offline storage
-- date-fns for date handling
+- dayjs for date handling
 - Axios for HTTP requests
 
 ### Backend

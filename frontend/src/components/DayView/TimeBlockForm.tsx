@@ -14,6 +14,7 @@ import {
   Typography,
 } from '@mui/material';
 import { DateTimePicker } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
 import { TimeBlock } from '../../types';
 import { useTimeBlockStore } from '../../store/timeblock.store';
 import { useTaskStore } from '../../store/task.store';
@@ -39,17 +40,17 @@ export const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
   
   const [title, setTitle] = useState(timeBlock?.title || '');
   const [notes, setNotes] = useState(timeBlock?.notes || '');
-  const [start, setStart] = useState<Date>(
-    timeBlock?.start || defaultStart || roundToNearest15Minutes(new Date())
+  const [start, setStart] = useState<Dayjs>(
+    dayjs(timeBlock?.start || defaultStart || roundToNearest15Minutes(new Date()))
   );
-  const [end, setEnd] = useState<Date>(
-    timeBlock?.end || defaultEnd || roundToNearest15Minutes(new Date(Date.now() + 60 * 60 * 1000))
+  const [end, setEnd] = useState<Dayjs>(
+    dayjs(timeBlock?.end || defaultEnd || roundToNearest15Minutes(new Date(Date.now() + 60 * 60 * 1000)))
   );
   const [taskId, setTaskId] = useState(timeBlock?.taskId || '');
 
   const handleSubmit = async () => {
-    const roundedStart = roundToNearest15Minutes(start);
-    const roundedEnd = roundToNearest15Minutes(end);
+    const roundedStart = roundToNearest15Minutes(start.toDate());
+    const roundedEnd = roundToNearest15Minutes(end.toDate());
 
     if (roundedEnd <= roundedStart) {
       alert('End time must be after start time');
@@ -76,7 +77,7 @@ export const TimeBlockForm: React.FC<TimeBlockFormProps> = ({
     }
   };
 
-  const duration = Math.round((end.getTime() - start.getTime()) / (1000 * 60));
+  const duration = Math.round(end.diff(start, 'minute'));
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>

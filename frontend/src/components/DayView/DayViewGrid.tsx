@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Box, Paper, Typography, IconButton, Button } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
 import { DndContext, DragEndEvent, DragOverlay } from '@dnd-kit/core';
-import { format, addDays, subDays, startOfDay, setHours, setMinutes } from 'date-fns';
+import dayjs from 'dayjs';
 import { TimeBlock } from './TimeBlock';
 import { TimeSlot } from './TimeSlot';
 import { useTimeBlockStore } from '../../store/timeblock.store';
@@ -29,9 +29,9 @@ export const DayViewGrid: React.FC = () => {
     }
 
     const [hour, minute] = over.id.toString().split('-').map(Number);
-    const newStart = setMinutes(setHours(startOfDay(selectedDate), hour), minute);
-    const duration = draggedBlock.end.getTime() - draggedBlock.start.getTime();
-    const newEnd = new Date(newStart.getTime() + duration);
+    const newStart = dayjs(selectedDate).startOf('day').hour(hour).minute(minute).toDate();
+    const duration = dayjs(draggedBlock.end).diff(dayjs(draggedBlock.start), 'millisecond');
+    const newEnd = dayjs(newStart).add(duration, 'millisecond').toDate();
 
     try {
       await updateTimeBlock(draggedBlock.id, {
@@ -50,8 +50,8 @@ export const DayViewGrid: React.FC = () => {
     if (block) setDraggedBlock(block);
   };
 
-  const handlePrevDay = () => setSelectedDate(subDays(selectedDate, 1));
-  const handleNextDay = () => setSelectedDate(addDays(selectedDate, 1));
+  const handlePrevDay = () => setSelectedDate(dayjs(selectedDate).subtract(1, 'day').toDate());
+  const handleNextDay = () => setSelectedDate(dayjs(selectedDate).add(1, 'day').toDate());
   const handleToday = () => setSelectedDate(new Date());
 
   const getBlockPosition = (block: TimeBlockType) => {
@@ -75,7 +75,7 @@ export const DayViewGrid: React.FC = () => {
           <ChevronLeft />
         </IconButton>
         <Typography variant="h6" sx={{ flex: 1, textAlign: 'center' }}>
-          {format(selectedDate, 'EEEE, MMMM d, yyyy')}
+          {dayjs(selectedDate).format('dddd, MMMM D, YYYY')}
         </Typography>
         <IconButton onClick={handleNextDay}>
           <ChevronRight />
@@ -106,9 +106,7 @@ export const DayViewGrid: React.FC = () => {
             {/* Time blocks */}
             {timeBlocks
               .filter(block => {
-                const blockDate = startOfDay(block.start);
-                const selectedStartOfDay = startOfDay(selectedDate);
-                return blockDate.getTime() === selectedStartOfDay.getTime();
+                return dayjs(block.start).isSame(dayjs(selectedDate), 'day');
               })
               .map(block => {
                 const { top, height } = getBlockPosition(block);
@@ -145,7 +143,7 @@ export const DayViewGrid: React.FC = () => {
                   {draggedBlock.title}
                 </Typography>
                 <Typography variant="caption">
-                  {format(draggedBlock.start, 'h:mm a')} - {format(draggedBlock.end, 'h:mm a')}
+                  {dayjs(draggedBlock.start).format('h:mm A')} - {dayjs(draggedBlock.end).format('h:mm A')}
                 </Typography>
               </Box>
             )}

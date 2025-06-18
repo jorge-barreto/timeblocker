@@ -1,14 +1,21 @@
-import { format, formatDistance, isToday, isTomorrow, isYesterday } from 'date-fns';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 export const formatTime = (date: Date): string => {
-  return format(date, 'h:mm a');
+  return dayjs(date).format('h:mm A');
 };
 
 export const formatDate = (date: Date): string => {
-  if (isToday(date)) return 'Today';
-  if (isTomorrow(date)) return 'Tomorrow';
-  if (isYesterday(date)) return 'Yesterday';
-  return format(date, 'MMM d, yyyy');
+  const day = dayjs(date);
+  const today = dayjs();
+  
+  if (day.isSame(today, 'day')) return 'Today';
+  if (day.isSame(today.add(1, 'day'), 'day')) return 'Tomorrow';
+  if (day.isSame(today.subtract(1, 'day'), 'day')) return 'Yesterday';
+  
+  return day.format('MMM D, YYYY');
 };
 
 export const formatDateTime = (date: Date): string => {
@@ -25,47 +32,41 @@ export const formatDuration = (minutes: number): string => {
 };
 
 export const formatRelativeTime = (date: Date): string => {
-  return formatDistance(date, new Date(), { addSuffix: true });
+  return dayjs(date).fromNow();
 };
 
 export const roundToNearest15Minutes = (date: Date): Date => {
-  const minutes = date.getMinutes();
-  const roundedMinutes = Math.round(minutes / 15) * 15;
-  const newDate = new Date(date);
-  newDate.setMinutes(roundedMinutes);
-  newDate.setSeconds(0);
-  newDate.setMilliseconds(0);
-  return newDate;
+  return dayjs(date)
+    .minute(Math.round(dayjs(date).minute() / 15) * 15)
+    .second(0)
+    .millisecond(0)
+    .toDate();
 };
 
 export const getTimeSlots = (startHour: number = 6, endHour: number = 23): Date[] => {
   const slots: Date[] = [];
-  const today = new Date();
-  today.setHours(startHour, 0, 0, 0);
+  let current = dayjs().hour(startHour).minute(0).second(0).millisecond(0);
+  const end = dayjs().hour(endHour).minute(0).second(0).millisecond(0);
 
-  while (today.getHours() <= endHour) {
-    slots.push(new Date(today));
-    today.setMinutes(today.getMinutes() + 15);
+  while (current.isBefore(end) || current.isSame(end)) {
+    slots.push(current.toDate());
+    current = current.add(15, 'minute');
   }
 
   return slots;
 };
 
 export const isValidTimeBlockDuration = (start: Date, end: Date): boolean => {
-  const duration = end.getTime() - start.getTime();
-  const minimumDuration = 15 * 60 * 1000; // 15 minutes in milliseconds
-  return duration >= minimumDuration && duration % minimumDuration === 0;
+  const duration = dayjs(end).diff(dayjs(start), 'minute');
+  return duration >= 15 && duration % 15 === 0;
 };
 
 export const getWeekDates = (date: Date): Date[] => {
   const week = [];
-  const startOfWeek = new Date(date);
-  startOfWeek.setDate(date.getDate() - date.getDay());
+  const startOfWeek = dayjs(date).startOf('week');
 
   for (let i = 0; i < 7; i++) {
-    const day = new Date(startOfWeek);
-    day.setDate(startOfWeek.getDate() + i);
-    week.push(day);
+    week.push(startOfWeek.add(i, 'day').toDate());
   }
 
   return week;
