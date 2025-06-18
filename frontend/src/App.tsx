@@ -12,6 +12,7 @@ import { DayView } from './pages/DayView';
 import { Tasks } from './pages/Tasks';
 import { useAuthStore } from './store/authStore';
 import { useNavigate } from 'react-router-dom';
+import logoIcon from './assets/icon.svg';
 
 function App() {
   const { isAuthenticated, logout } = useAuthStore();
@@ -47,9 +48,17 @@ function App() {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              TimeBlocker
-            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+              <img 
+                src={logoIcon} 
+                alt="TimeBlocker" 
+                style={{ width: 32, height: 32, marginRight: 8 }}
+              />
+              <Typography variant="h6" component="div">
+                TimeBlocker
+              </Typography>
+            </Box>
+            <Box sx={{ flexGrow: 1 }} />
             
             {isAuthenticated && (
               <>

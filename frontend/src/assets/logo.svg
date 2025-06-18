@@ -1,0 +1,60 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="#1976d2" stroke="#1565c0" stroke-width="2"/>
+  
+  <!-- Inner decorative ring -->
+  <circle cx="60" cy="60" r="48" fill="none" stroke="#90caf9" stroke-width="1" opacity="0.6"/>
+  
+  <!-- Clock face background -->
+  <circle cx="60" cy="60" r="38" fill="#ffffff" stroke="#1976d2" stroke-width="2"/>
+  
+  <!-- Hour markers -->
+  <g stroke="#1976d2" stroke-width="2">
+    <!-- 12, 3, 6, 9 o'clock markers (longer) -->
+    <line x1="60" y1="26" x2="60" y2="32" stroke-width="3"/>
+    <line x1="94" y1="60" x2="88" y2="60" stroke-width="3"/>
+    <line x1="60" y1="94" x2="60" y2="88" stroke-width="3"/>
+    <line x1="26" y1="60" x2="32" y2="60" stroke-width="3"/>
+    
+    <!-- Other hour markers (shorter) -->
+    <line x1="82.4" y1="32.4" x2="78.8" y2="36"/>
+    <line x1="82.4" y1="87.6" x2="78.8" y2="84"/>
+    <line x1="37.6" y1="87.6" x2="41.2" y2="84"/>
+    <line x1="37.6" y1="32.4" x2="41.2" y2="36"/>
+  </g>
+  
+  <!-- Time blocks - representing scheduled segments -->
+  <!-- Morning block (9-12) -->
+  <path d="M 60 60 L 60 34 A 26 26 0 0 1 82.4 47.6 Z" fill="#4caf50" opacity="0.8"/>
+  
+  <!-- Afternoon block (12-3) -->
+  <path d="M 60 60 L 82.4 47.6 A 26 26 0 0 1 86 60 Z" fill="#ff9800" opacity="0.8"/>
+  
+  <!-- Late afternoon block (3-6) -->
+  <path d="M 60 60 L 86 60 A 26 26 0 0 1 60 86 Z" fill="#f44336" opacity="0.8"/>
+  
+  <!-- Clock hands pointing to 2:30 (common scheduling time) -->
+  <g stroke="#1976d2" stroke-width="3" stroke-linecap="round">
+    <!-- Hour hand pointing to 2:30 -->
+    <line x1="60" y1="60" x2="72" y2="50"/>
+    <!-- Minute hand pointing to 6 -->
+    <line x1="60" y1="60" x2="60" y2="78"/>
+  </g>
+  
+  <!-- Center dot -->
+  <circle cx="60" cy="60" r="4" fill="#1976d2"/>
+  
+  <!-- Task/block symbols around the outside -->
+  <g fill="#ffffff" stroke="#1976d2" stroke-width="1">
+    <!-- Small squares representing tasks/blocks -->
+    <rect x="107" y="57" width="6" height="6" rx="1"/>
+    <rect x="7" y="57" width="6" height="6" rx="1"/>
+    <rect x="57" y="7" width="6" height="6" rx="1"/>
+    <rect x="57" y="107" width="6" height="6" rx="1"/>
+  </g>
+  
+  <!-- App name text (optional, can be removed if used as icon) -->
+  <text x="60" y="108" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#1976d2">
+    TimeBlocker
+  </text>
+</svg>

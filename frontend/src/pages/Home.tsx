@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../services/authService';
 import { useState, useEffect } from 'react';
+import logo from '../assets/logo.svg';
 
 export function Home() {
   const navigate = useNavigate();
@@ -41,6 +42,14 @@ export function Home() {
 
   return (
     <Box sx={{ textAlign: 'center', py: 8 }}>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'center' }}>
+        <img 
+          src={logo} 
+          alt="TimeBlocker Logo" 
+          style={{ width: 120, height: 120 }}
+        />
+      </Box>
+      
       <Typography variant="h2" component="h1" gutterBottom>
         Welcome to TimeBlocker
       </Typography>
