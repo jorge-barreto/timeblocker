@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../entities/User';
 import { JWTPayload } from '../types';
+import { config } from '../config/env.config';
 
 export class AuthService {
   static async hashPassword(password: string): Promise<string> {
@@ -18,12 +19,12 @@ export class AuthService {
       email: user.email
     };
     
-    return jwt.sign(payload, process.env.JWT_SECRET!, {
+    return jwt.sign(payload, config.JWT_SECRET, {
       expiresIn: '7d'
     });
   }
 
   static verifyToken(token: string): JWTPayload {
-    return jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+    return jwt.verify(token, config.JWT_SECRET) as JWTPayload;
   }
 }

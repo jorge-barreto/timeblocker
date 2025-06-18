@@ -5,7 +5,14 @@
       "Bash(find:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npm:*)",
+      "Bash(yarn:*)",
+      "Bash(timeout 5s npm run dev)",
+      "Bash(true)",
+      "Bash(yarn workspace @timeblocker/frontend:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(docker compose:*)"
     ],
     "deny": []
   }

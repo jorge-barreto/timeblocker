@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { MikroORM, RequestContext } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import mikroOrmConfig from './config/mikro-orm.config';
+import { config } from './config/env.config';
 import { AuthController } from './controllers/auth.controller';
 import { TaskController } from './controllers/task.controller';
 import { TimeBlockController } from './controllers/timeblock.controller';
@@ -11,10 +11,8 @@ import { authenticate } from './middleware/auth.middleware';
 import { NotificationService } from './services/notification.service';
 import cron from 'node-cron';
 
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = config.PORT;
 
 // Middleware
 app.use(cors());

@@ -4,13 +4,14 @@ import { TimeBlock } from '../entities/TimeBlock';
 import { EntityManager } from '@mikro-orm/core';
 import { format } from 'date-fns';
 import { utcToZonedTime } from 'date-fns-tz';
+import { config } from '../config/env.config';
 
 export class NotificationService {
   static initialize() {
     webpush.setVapidDetails(
-      process.env.VAPID_EMAIL!,
-      process.env.VAPID_PUBLIC_KEY!,
-      process.env.VAPID_PRIVATE_KEY!
+      config.VAPID_EMAIL,
+      config.VAPID_PUBLIC_KEY,
+      config.VAPID_PRIVATE_KEY
     );
   }
 

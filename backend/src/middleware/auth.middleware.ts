@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWTPayload } from '../types';
+import { config } from '../config/env.config';
 
 declare global {
   namespace Express {
@@ -18,7 +19,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       throw new Error();
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JWTPayload;
+    const decoded = jwt.verify(token, config.JWT_SECRET) as JWTPayload;
     req.user = decoded;
     
     next();

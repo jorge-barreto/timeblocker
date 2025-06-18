@@ -3,13 +3,14 @@ import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { User } from '../entities/User';
 import { Task } from '../entities/Task';
 import { TimeBlock } from '../entities/TimeBlock';
+import { config, isDevelopment } from './env.config';
 import path from 'path';
 
-const config: Options<PostgreSqlDriver> = {
+const mikroOrmConfig: Options<PostgreSqlDriver> = {
   entities: [User, Task, TimeBlock],
-  dbName: process.env.DATABASE_URL,
+  clientUrl: config.DATABASE_URL,
   type: 'postgresql',
-  debug: process.env.NODE_ENV !== 'production',
+  debug: isDevelopment(),
   migrations: {
     path: path.join(__dirname, '../../migrations'),
     pathTs: path.join(__dirname, '../../migrations'),
@@ -17,4 +18,4 @@ const config: Options<PostgreSqlDriver> = {
   },
 };
 
-export default config;
+export default mikroOrmConfig;

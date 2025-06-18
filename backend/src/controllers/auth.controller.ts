@@ -27,12 +27,11 @@ export class AuthController {
           return res.status(400).json({ error: 'Email already registered' });
         }
 
-        const user = this.em.create(User, {
-          email,
-          passwordHash: await AuthService.hashPassword(password),
-          name,
-          timezone: timezone || 'UTC'
-        });
+        const user = new User();
+        user.email = email;
+        user.passwordHash = await AuthService.hashPassword(password);
+        user.name = name;
+        user.timezone = timezone || 'UTC';
 
         await this.em.persistAndFlush(user);
 
