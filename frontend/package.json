@@ -1,7 +1,7 @@
 {
-  "name": "@timegrid/frontend",
+  "name": "@timeblocker/frontend",
   "version": "1.0.0",
-  "description": "TimeGrid Progressive Web App frontend",
+  "description": "TimeBlocker Progressive Web App frontend",
   "private": true,
   "type": "module",
   "scripts": {

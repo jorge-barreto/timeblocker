@@ -1,4 +1,4 @@
-# TimeGrid Frontend - Services and Key Components
+# TimeBlocker Frontend - Services and Key Components
 
 ## src/services/auth.service.ts
 ```typescript
@@ -582,7 +582,7 @@ export const AppBar: React.FC = () => {
     <MuiAppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          TimeGrid
+          TimeBlocker
         </Typography>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -963,7 +963,7 @@ export const RegisterForm: React.FC = () => {
     }}>
       <Paper sx={{ p: 4, maxWidth: 400, width: '100%' }}>
         <Typography variant="h4" align="center" gutterBottom>
-          TimeGrid
+          TimeBlocker
         </Typography>
         <Typography variant="h6" align="center" gutterBottom>
           Create Account

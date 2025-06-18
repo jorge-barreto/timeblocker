@@ -4,22 +4,22 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: timegrid
-      POSTGRES_PASSWORD: timegrid_password
-      POSTGRES_DB: timegrid
+      POSTGRES_USER: timeblocker
+      POSTGRES_PASSWORD: timeblocker_password
+      POSTGRES_DB: timeblocker
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - timegrid-network
+      - timeblocker-network
 
   backend:
     build: ./backend
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://timegrid:timegrid_password@postgres:5432/timegrid
+      DATABASE_URL: postgresql://timeblocker:timeblocker_password@postgres:5432/timeblocker
       NODE_ENV: production
     depends_on:
       - postgres
@@ -27,7 +27,7 @@ services:
       - ./backend/src:/app/src
       - ./backend/migrations:/app/migrations
     networks:
-      - timegrid-network
+      - timeblocker-network
 
   frontend:
     build: ./frontend
@@ -41,7 +41,7 @@ services:
     volumes:
       - ./frontend/src:/app/src
     networks:
-      - timegrid-network
+      - timeblocker-network
 
   nginx:
     image: nginx:alpine
@@ -53,11 +53,11 @@ services:
       - frontend
       - backend
     networks:
-      - timegrid-network
+      - timeblocker-network
 
 volumes:
   postgres_data:
 
 networks:
-  timegrid-network:
+  timeblocker-network:
     driver: bridge

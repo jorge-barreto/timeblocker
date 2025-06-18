@@ -1,4 +1,4 @@
-# TimeGrid Frontend PWA
+# TimeBlocker Frontend PWA
 
 ## Directory Structure
 ```
@@ -143,8 +143,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'TimeGrid',
-        short_name: 'TimeGrid',
+        name: 'TimeBlocker',
+        short_name: 'TimeBlocker',
         description: 'Calendar-style time management app',
         theme_color: '#1976d2',
         background_color: '#ffffff',
@@ -203,7 +203,7 @@ export default defineConfig({
     <meta name="theme-color" content="#1976d2" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
-    <title>TimeGrid - Time Management</title>
+    <title>TimeBlocker - Time Management</title>
   </head>
   <body>
     <div id="root"></div>
@@ -380,7 +380,7 @@ api.interceptors.response.use(
 import { openDB, DBSchema, IDBPDatabase } from 'idb';
 import { Task, TimeBlock, SyncQueueItem } from '../types';
 
-interface TimeGridDB extends DBSchema {
+interface TimeBlockerDB extends DBSchema {
   tasks: {
     key: string;
     value: Task;
@@ -399,10 +399,10 @@ interface TimeGridDB extends DBSchema {
 }
 
 class OfflineService {
-  private db: IDBPDatabase<TimeGridDB> | null = null;
+  private db: IDBPDatabase<TimeBlockerDB> | null = null;
 
   async init() {
-    this.db = await openDB<TimeGridDB>('timegrid', 1, {
+    this.db = await openDB<TimeBlockerDB>('timegrid', 1, {
       upgrade(db) {
         // Tasks store
         const taskStore = db.createObjectStore('tasks', { keyPath: 'id' });
@@ -1218,7 +1218,7 @@ export const LoginForm: React.FC = () => {
     }}>
       <Paper sx={{ p: 4, maxWidth: 400, width: '100%' }}>
         <Typography variant="h4" align="center" gutterBottom>
-          TimeGrid
+          TimeBlocker
         </Typography>
         <Typography variant="h6" align="center" gutterBottom>
           Login
@@ -1407,7 +1407,7 @@ self.addEventListener('push', (event) => {
   const data = event.data?.json() || {};
   
   event.waitUntil(
-    self.registration.showNotification(data.title || 'TimeGrid', {
+    self.registration.showNotification(data.title || 'TimeBlocker', {
       body: data.body,
       icon: '/icon-192.png',
       badge: '/icon-192.png',

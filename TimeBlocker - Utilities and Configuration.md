@@ -1,4 +1,4 @@
-# TimeGrid - Utilities and Configuration Files
+# TimeBlocker - Utilities and Configuration Files
 
 ## src/utils/date.utils.ts
 ```typescript
@@ -184,7 +184,7 @@ export const generateNotificationText = (
     
     default:
       return {
-        title: 'TimeGrid Notification',
+        title: 'TimeBlocker Notification',
         body: 'You have a new notification',
       };
   }
@@ -213,8 +213,8 @@ VITE_VAPID_PUBLIC_KEY=your-vapid-public-key
 ## public/manifest.json
 ```json
 {
-  "name": "TimeGrid - Time Management",
-  "short_name": "TimeGrid",
+  "name": "TimeBlocker - Time Management",
+  "short_name": "TimeBlocker",
   "description": "A calendar-style time management app for organizing your day",
   "start_url": "/",
   "display": "standalone",
@@ -327,7 +327,7 @@ console.log(`VAPID_PRIVATE_KEY=${vapidKeys.privateKey}`);
 
 ## README.md
 ```markdown
-# TimeGrid - Time Management PWA
+# TimeBlocker - Time Management PWA
 
 A Progressive Web App for calendar-style time management with offline support, drag-and-drop scheduling, and task tracking.
 
@@ -611,7 +611,7 @@ server {
 
 ## GitHub Actions Workflow (.github/workflows/deploy.yml)
 ```yaml
-name: Deploy TimeGrid
+name: Deploy TimeBlocker
 
 on:
   push:
@@ -689,7 +689,7 @@ jobs:
           echo "Deploy to ECS here"
 ```
 
-This completes the full TimeGrid PWA implementation with:
+This completes the full TimeBlocker PWA implementation with:
 
 1. ✅ Complete backend with MikroORM, JWT auth, and push notifications
 2. ✅ Full PWA frontend with offline support and background sync

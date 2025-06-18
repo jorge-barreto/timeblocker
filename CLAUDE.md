@@ -8,7 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-TimeGrid is designed as a PWA that combines calendar functionality with time blocking, task management, and offline-first capabilities. The application uses 15-minute increment time blocks with drag-and-drop functionality for time management.
+TimeBlocker is designed as a PWA that combines calendar functionality with time blocking, task management, and offline-first capabilities. The application uses 15-minute increment time blocks with drag-and-drop functionality for time management.
 
 ## Project Structure
 
@@ -47,10 +47,10 @@ This is a monorepo using Yarn workspaces with the following structure:
 
 The following specification files contain detailed implementation guidance:
 
-- `TimeGrid Frontend PWA.md` - Frontend components, state management, PWA features
-- `TimeGrid Frontend - Services.md` - API services, offline sync, notification handling
-- `TimeGrid Backend.md` - API endpoints, database schema, authentication
-- `TimeGrid - Utilities and Configuration.md` - Shared utilities, configuration, deployment
+- `TimeBlocker Frontend PWA.md` - Frontend components, state management, PWA features
+- `TimeBlocker Frontend - Services.md` - API services, offline sync, notification handling
+- `TimeBlocker Backend.md` - API endpoints, database schema, authentication
+- `TimeBlocker - Utilities and Configuration.md` - Shared utilities, configuration, deployment
 
 ## Implementation Commands
 
@@ -66,9 +66,9 @@ yarn docker:logs        # View logs from all services
 
 ### Backend Workspace
 ```bash
-yarn workspace @timegrid/backend dev          # Development server
-yarn workspace @timegrid/backend build        # Build TypeScript
-yarn workspace @timegrid/backend start        # Production server
+yarn workspace @timeblocker/backend dev          # Development server
+yarn workspace @timeblocker/backend build        # Build TypeScript
+yarn workspace @timeblocker/backend start        # Production server
 yarn migration:create     # Create database migration (from root)
 yarn migration:up         # Run pending migrations (from root)
 yarn migration:down       # Rollback migrations (from root)
@@ -76,11 +76,11 @@ yarn migration:down       # Rollback migrations (from root)
 
 ### Frontend Workspace  
 ```bash
-yarn workspace @timegrid/frontend dev         # Development server with HMR
-yarn workspace @timegrid/frontend build       # Production build
-yarn workspace @timegrid/frontend preview     # Preview production build
-yarn workspace @timegrid/frontend lint        # ESLint check
-yarn workspace @timegrid/frontend type-check  # TypeScript check
+yarn workspace @timeblocker/frontend dev         # Development server with HMR
+yarn workspace @timeblocker/frontend build       # Production build
+yarn workspace @timeblocker/frontend preview     # Preview production build
+yarn workspace @timeblocker/frontend lint        # ESLint check
+yarn workspace @timeblocker/frontend type-check  # TypeScript check
 ```
 
 ### Environment Setup

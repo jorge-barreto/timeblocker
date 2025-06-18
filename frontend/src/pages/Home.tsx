@@ -14,7 +14,7 @@ export function Home() {
   return (
     <Box sx={{ textAlign: 'center', py: 8 }}>
       <Typography variant="h2" component="h1" gutterBottom>
-        Welcome to TimeGrid
+        Welcome to TimeBlocker
       </Typography>
       
       <Typography variant="h5" component="h2" gutterBottom color="text.secondary">

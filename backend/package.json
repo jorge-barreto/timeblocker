@@ -1,7 +1,7 @@
 {
-  "name": "@timegrid/backend",
+  "name": "@timeblocker/backend",
   "version": "1.0.0",
-  "description": "TimeGrid task management backend",
+  "description": "TimeBlocker task management backend",
   "main": "dist/app.js",
   "private": true,
   "scripts": {

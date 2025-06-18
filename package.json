@@ -1,28 +1,28 @@
 {
-  "name": "timegrid",
+  "name": "timeblocker",
   "version": "1.0.0",
-  "description": "TimeGrid - Progressive Web App for calendar-style time management",
+  "description": "TimeBlocker - Progressive Web App for calendar-style time management",
   "private": true,
   "workspaces": [
     "backend",
     "frontend"
   ],
   "scripts": {
-    "dev": "yarn workspace backend dev & yarn workspace frontend dev",
-    "build": "yarn workspace backend build && yarn workspace frontend build",
-    "start": "yarn workspace backend start",
-    "backend:dev": "yarn workspace backend dev",
-    "backend:build": "yarn workspace backend build",
-    "backend:start": "yarn workspace backend start",
-    "frontend:dev": "yarn workspace frontend dev",
-    "frontend:build": "yarn workspace frontend build",
-    "frontend:preview": "yarn workspace frontend preview",
+    "dev": "yarn workspace @timeblocker/backend dev & yarn workspace @timeblocker/frontend dev",
+    "build": "yarn workspace @timeblocker/backend build && yarn workspace @timeblocker/frontend build",
+    "start": "yarn workspace @timeblocker/backend start",
+    "backend:dev": "yarn workspace @timeblocker/backend dev",
+    "backend:build": "yarn workspace @timeblocker/backend build",
+    "backend:start": "yarn workspace @timeblocker/backend start",
+    "frontend:dev": "yarn workspace @timeblocker/frontend dev",
+    "frontend:build": "yarn workspace @timeblocker/frontend build",
+    "frontend:preview": "yarn workspace @timeblocker/frontend preview",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "migration:create": "yarn workspace backend migration:create",
-    "migration:up": "yarn workspace backend migration:up",
-    "migration:down": "yarn workspace backend migration:down"
+    "migration:create": "yarn workspace @timeblocker/backend migration:create",
+    "migration:up": "yarn workspace @timeblocker/backend migration:up",
+    "migration:down": "yarn workspace @timeblocker/backend migration:down"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

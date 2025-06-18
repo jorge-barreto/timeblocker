@@ -1,4 +1,4 @@
-# TimeGrid Backend
+# TimeBlocker Backend
 
 ## Directory Structure
 ```
@@ -34,9 +34,9 @@ backend/
 ## package.json
 ```json
 {
-  "name": "timegrid-backend",
+  "name": "timeblocker-backend",
   "version": "1.0.0",
-  "description": "TimeGrid task management backend",
+  "description": "TimeBlocker task management backend",
   "main": "dist/app.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/app.ts",
@@ -103,7 +103,7 @@ backend/
 ```
 NODE_ENV=development
 PORT=3000
-DATABASE_URL=postgresql://user:password@localhost:5432/timegrid
+DATABASE_URL=postgresql://user:password@localhost:5432/timeblocker
 JWT_SECRET=your-secret-key-here
 VAPID_PUBLIC_KEY=your-vapid-public-key
 VAPID_PRIVATE_KEY=your-vapid-private-key
@@ -118,9 +118,9 @@ services:
   postgres:
     image: postgres:15-alpine
     environment:
-      POSTGRES_USER: timegrid
-      POSTGRES_PASSWORD: timegrid_password
-      POSTGRES_DB: timegrid
+      POSTGRES_USER: timeblocker
+      POSTGRES_PASSWORD: timeblocker_password
+      POSTGRES_DB: timeblocker
     ports:
       - "5432:5432"
     volumes:
@@ -131,7 +131,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      DATABASE_URL: postgresql://timegrid:timegrid_password@postgres:5432/timegrid
+      DATABASE_URL: postgresql://timeblocker:timeblocker_password@postgres:5432/timeblocker
       NODE_ENV: production
     depends_on:
       - postgres

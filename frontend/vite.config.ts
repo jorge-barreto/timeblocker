@@ -14,8 +14,8 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'TimeGrid',
-        short_name: 'TimeGrid',
+        name: 'TimeBlocker',
+        short_name: 'TimeBlocker',
         description: 'Calendar-style time management with time blocking',
         theme_color: '#1976d2',
         background_color: '#ffffff',
