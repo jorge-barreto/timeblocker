@@ -16,7 +16,8 @@
       "Bash(yarn workspace @timeblocker/backend:*)",
       "Bash(npm install:*)",
       "Bash(rm:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(npx playwright:*)"
     ],
     "deny": []
   }

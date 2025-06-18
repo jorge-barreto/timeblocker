@@ -9,6 +9,8 @@ import {
   Link as MuiLink
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '../services/authService';
+import { useAuthStore } from '../store/authStore';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -16,6 +18,7 @@ export function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setAuth } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,12 +26,15 @@ export function Login() {
     setError('');
 
     try {
-      // TODO: Implement login API call
-      console.log('Login attempt:', { email, password });
-      // For now, just navigate to dashboard
+      const response = await authService.login({
+        email,
+        password,
+      });
+      
+      setAuth(response.user, response.token);
       navigate('/dashboard');
-    } catch (err) {
-      setError('Login failed. Please check your credentials.');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }

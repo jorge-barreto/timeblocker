@@ -9,6 +9,8 @@ import {
   Link as MuiLink
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '../services/authService';
+import { useAuthStore } from '../store/authStore';
 
 export function Register() {
   const [email, setEmail] = useState('');
@@ -17,6 +19,7 @@ export function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setAuth } = useAuthStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,12 +27,16 @@ export function Register() {
     setError('');
 
     try {
-      // TODO: Implement registration API call
-      console.log('Registration attempt:', { email, password, name });
-      // For now, just navigate to dashboard
+      const response = await authService.register({
+        email,
+        password,
+        name,
+      });
+      
+      setAuth(response.user, response.token);
       navigate('/dashboard');
-    } catch (err) {
-      setError('Registration failed. Please try again.');
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
