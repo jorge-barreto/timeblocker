@@ -4,13 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Status
 
-**Backend implementation is complete** based on specifications in TimeGrid Backend.md. The backend includes full API endpoints, database schema, authentication, and notification services. Frontend implementation is still pending.
+**Monorepo structure implemented with Yarn workspaces**. Backend implementation is complete with full API endpoints, database schema, authentication, and notification services. Frontend shell is created with basic React/Vite setup. Full frontend implementation is pending.
 
 ## Project Overview
 
 TimeGrid is designed as a PWA that combines calendar functionality with time blocking, task management, and offline-first capabilities. The application uses 15-minute increment time blocks with drag-and-drop functionality for time management.
 
-## Planned Technology Stack
+## Project Structure
+
+This is a monorepo using Yarn workspaces with the following structure:
+```
+/
+├── backend/          # Express.js API server (✅ COMPLETED)
+├── frontend/         # React PWA (🔄 SHELL CREATED)
+├── package.json      # Root workspace configuration
+├── docker-compose.yml # Multi-service Docker setup
+└── nginx.conf        # Production reverse proxy config
+```
+
+## Technology Stack
 
 ### Frontend
 - React 18 with TypeScript
@@ -42,39 +54,44 @@ The following specification files contain detailed implementation guidance:
 
 ## Implementation Commands
 
-### Backend (Implemented)
+### Monorepo Setup
 ```bash
-cd backend
-npm install          # Install dependencies
-npm run dev          # Development server with nodemon
-npm run build        # TypeScript compilation to dist/
-npm start            # Production server from dist/
-npm run migration:create  # Create new database migration  
-npm run migration:up      # Run pending migrations
-npm run migration:down    # Rollback migrations
+yarn install            # Install all workspace dependencies
+yarn dev                # Start both frontend and backend in development
+yarn build              # Build both frontend and backend
+yarn docker:up          # Start all Docker services (postgres, backend, frontend, nginx)
+yarn docker:down        # Stop all Docker services
+yarn docker:logs        # View logs from all services
 ```
 
-### Frontend (Expected)
+### Backend Workspace
 ```bash
-npm run dev         # Development server with HMR
-npm run build       # Production build
-npm run preview     # Preview production build
-npm test           # Run tests
+yarn workspace @timegrid/backend dev          # Development server
+yarn workspace @timegrid/backend build        # Build TypeScript
+yarn workspace @timegrid/backend start        # Production server
+yarn migration:create     # Create database migration (from root)
+yarn migration:up         # Run pending migrations (from root)
+yarn migration:down       # Rollback migrations (from root)
 ```
 
-### Docker (Implemented)
+### Frontend Workspace  
 ```bash
-cd backend
-docker-compose up -d        # Start PostgreSQL and backend services
-docker-compose down         # Stop all services  
-docker-compose logs -f      # View logs from all services
+yarn workspace @timegrid/frontend dev         # Development server with HMR
+yarn workspace @timegrid/frontend build       # Production build
+yarn workspace @timegrid/frontend preview     # Preview production build
+yarn workspace @timegrid/frontend lint        # ESLint check
+yarn workspace @timegrid/frontend type-check  # TypeScript check
 ```
 
 ### Environment Setup
 ```bash
-cd backend
-cp .env.example .env        # Copy and configure environment variables
-# Edit .env with actual values for JWT_SECRET, VAPID keys, etc.
+# Backend environment
+cp backend/.env.example backend/.env
+# Edit backend/.env with JWT_SECRET, VAPID keys, database URL
+
+# Frontend environment  
+cp frontend/.env.example frontend/.env
+# Edit frontend/.env with API URL and VAPID public key
 ```
 
 ## Architecture Notes
@@ -86,9 +103,9 @@ cp .env.example .env        # Copy and configure environment variables
 - **JWT Authentication**: Stateless authentication with refresh token rotation
 - **Database Migrations**: Uses MikroORM migrations for schema versioning
 
-## Backend Implementation Status
+## Implementation Status
 
-✅ **Completed Components:**
+### ✅ Backend (Completed)
 - Express.js server with TypeScript
 - MikroORM with PostgreSQL integration  
 - JWT authentication system
@@ -101,14 +118,32 @@ cp .env.example .env        # Copy and configure environment variables
 - Docker containerization
 - Comprehensive error handling and validation
 
+### 🔄 Frontend (Shell Created)
+- ✅ React 18 + TypeScript + Vite setup
+- ✅ Material UI theme and basic components
+- ✅ React Router with authentication routing
+- ✅ Zustand auth store structure
+- ✅ Basic page components (Home, Login, Register, Dashboard)
+- ✅ PWA configuration with vite-plugin-pwa
+- 🔄 API service integration (PENDING)
+- 🔄 Complete UI components (PENDING)
+- 🔄 Drag-and-drop time blocking (PENDING)
+- 🔄 Offline functionality (PENDING)
+
+### ✅ Infrastructure (Completed)
+- ✅ Yarn workspaces monorepo structure
+- ✅ Docker compose with multi-service setup
+- ✅ Nginx reverse proxy configuration
+- ✅ Production and development environments
+
 ## Development Workflow
 
 1. ✅ Backend API endpoints and database schema (COMPLETED)
-2. 🔄 Implement frontend components following Material UI design system (PENDING)
-3. 🔄 Add PWA features (service worker, manifest, offline capabilities) (PENDING)
+2. ✅ Monorepo structure with Yarn workspaces (COMPLETED)
+3. 🔄 Complete frontend UI components and API integration (IN PROGRESS)
 4. 🔄 Implement drag-and-drop time blocking functionality (PENDING)
-5. 🔄 Add push notification system (PENDING)
-6. ✅ Set up Docker containerization (COMPLETED)
+5. 🔄 Add PWA features and offline capabilities (PENDING)
+6. 🔄 Add push notification system integration (PENDING)
 7. 🔄 Configure CI/CD pipeline (PENDING)
 
 ## API Endpoints (Implemented)
@@ -144,5 +179,7 @@ cp .env.example .env        # Copy and configure environment variables
 - ✅ Time zone support for user-specific time calculations
 - ✅ Overlap detection for time block scheduling
 - ✅ Hierarchical task structure with subtask support
-- 🔄 Frontend state management through Zustand stores (PENDING)
+- ✅ Monorepo structure with Yarn workspaces
+- ✅ Multi-service Docker setup with Nginx reverse proxy
+- 🔄 Frontend state management through Zustand stores (IN PROGRESS)
 - 🔄 Offline data sync capabilities (PENDING)

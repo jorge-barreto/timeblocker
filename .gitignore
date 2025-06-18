@@ -124,7 +124,7 @@ temp/
 backend/dist/
 backend/.env
 
-# Frontend specific (when created)
+# Frontend specific
 frontend/dist/
 frontend/.env
 
