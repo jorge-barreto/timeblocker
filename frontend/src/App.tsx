@@ -9,6 +9,8 @@ import { useAuthStore } from './store/authStore';
 function App() {
   const { isAuthenticated } = useAuthStore();
 
+  console.log({isAuthenticated}, 'from App')
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

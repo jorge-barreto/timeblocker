@@ -16,6 +16,11 @@ const mikroOrmConfig: Options<PostgreSqlDriver> = {
     pathTs: path.join(__dirname, '../../migrations'),
     glob: '!(*.d).{js,ts}',
   },
+  seeder: {
+    path: path.join(__dirname, '../../seeders'),
+    pathTs: path.join(__dirname, '../../seeders'),
+    glob: '!(*.d).{js,ts}',
+  },
 };
 
 export default mikroOrmConfig;

@@ -10,6 +10,8 @@ export function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  console.log({isAuthenticated}, 'from Home')
+
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard');

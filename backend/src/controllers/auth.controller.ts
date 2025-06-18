@@ -127,8 +127,14 @@ export class AuthController {
 
   loginDemoUser = async (req: Request, res: Response) => {
     try {
-      // Create or get existing demo user
-      const demoUser = await DemoService.createDemoUser(this.em);
+      // Get demo user (should be created via seeding)
+      const demoUser = await DemoService.getDemoUser(this.em);
+      
+      if (!demoUser) {
+        return res.status(404).json({ 
+          error: 'Demo user not found. Please run seed:demo first.' 
+        });
+      }
       
       // Generate token for demo user
       const token = AuthService.generateToken(demoUser);
