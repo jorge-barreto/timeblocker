@@ -44,6 +44,7 @@ async function initializeApp() {
     // Auth routes
     app.post('/api/auth/register', authController.register);
     app.post('/api/auth/login', authController.login);
+    app.post('/api/auth/demo', authController.loginDemoUser);
     app.post('/api/auth/push-subscription', authenticate, authController.updatePushSubscription);
 
     // Task routes

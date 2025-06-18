@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { EntityManager } from '@mikro-orm/core';
 import { User } from '../entities/User';
 import { AuthService } from '../services/auth.service';
+import { DemoService } from '../services/demo.service';
 import { body, validationResult } from 'express-validator';
 
 export class AuthController {
@@ -121,6 +122,30 @@ export class AuthController {
     } catch (error) {
       console.error('Push subscription error:', error);
       res.status(500).json({ error: 'Failed to update push subscription' });
+    }
+  };
+
+  loginDemoUser = async (req: Request, res: Response) => {
+    try {
+      // Create or get existing demo user
+      const demoUser = await DemoService.createDemoUser(this.em);
+      
+      // Generate token for demo user
+      const token = AuthService.generateToken(demoUser);
+      
+      res.json({
+        user: {
+          id: demoUser.id,
+          email: demoUser.email,
+          name: demoUser.name,
+          timezone: demoUser.timezone
+        },
+        token,
+        isDemo: true
+      });
+    } catch (error) {
+      console.error('Demo login error:', error);
+      res.status(500).json({ error: 'Demo login failed' });
     }
   };
 }

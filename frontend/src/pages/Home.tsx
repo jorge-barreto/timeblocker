@@ -1,15 +1,35 @@
-import { Typography, Button, Box, Card, CardContent } from '@mui/material';
+import { Typography, Button, Box, Card, CardContent, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { authService } from '../services/authService';
+import { useState } from 'react';
 
 export function Home() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, login } = useAuthStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   if (isAuthenticated) {
     navigate('/dashboard');
     return null;
   }
+
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      const response = await authService.loginDemo();
+      login(response.user, response.token);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError('Failed to load demo. Please try again.');
+      console.error('Demo login error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box sx={{ textAlign: 'center', py: 8 }}>
@@ -21,17 +41,32 @@ export function Home() {
         Calendar-style time management with time blocking
       </Typography>
       
+      {error && (
+        <Alert severity="error" sx={{ mt: 2, mb: 2, maxWidth: 400, mx: 'auto' }}>
+          {error}
+        </Alert>
+      )}
+      
       <Box sx={{ mt: 4, mb: 6 }}>
         <Button
           variant="contained"
           size="large"
+          onClick={handleDemoLogin}
+          disabled={loading}
+          sx={{ mr: 2, mb: { xs: 2, sm: 0 } }}
+        >
+          {loading ? 'Loading Demo...' : 'Try Demo'}
+        </Button>
+        <Button
+          variant="outlined"
+          size="large"
           onClick={() => navigate('/register')}
-          sx={{ mr: 2 }}
+          sx={{ mr: 2, mb: { xs: 2, sm: 0 } }}
         >
           Get Started
         </Button>
         <Button
-          variant="outlined"
+          variant="text"
           size="large"
           onClick={() => navigate('/login')}
         >

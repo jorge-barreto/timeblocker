@@ -12,7 +12,8 @@
       "Bash(true)",
       "Bash(yarn workspace @timeblocker/frontend:*)",
       "Bash(docker-compose up:*)",
-      "Bash(docker compose:*)"
+      "Bash(docker compose:*)",
+      "Bash(yarn workspace @timeblocker/backend:*)"
     ],
     "deny": []
   }

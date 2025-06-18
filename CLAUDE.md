@@ -126,7 +126,8 @@ cp frontend/.env.example frontend/.env
 - ✅ Zustand auth store structure
 - ✅ Basic page components (Home, Login, Register, Dashboard)
 - ✅ PWA configuration with vite-plugin-pwa
-- 🔄 API service integration (PENDING)
+- ✅ API service integration (authService)
+- ✅ Demo user functionality with sample data
 - 🔄 Complete UI components (PENDING)
 - 🔄 Drag-and-drop time blocking (PENDING)
 - 🔄 Offline functionality (PENDING)
@@ -152,6 +153,7 @@ cp frontend/.env.example frontend/.env
 ### Authentication
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/login` - User login
+- `POST /api/auth/demo` - Login as demo user (creates demo data)
 - `POST /api/auth/push-subscription` - Update push notification subscription
 
 ### Tasks
@@ -168,6 +170,15 @@ cp frontend/.env.example frontend/.env
 
 ### Health Check
 - `GET /api/health` - Service health status
+
+## Demo User
+
+The application includes a demo user feature for easy testing:
+
+- **Access**: Click "Try Demo" button on the home page
+- **Credentials**: `demo@timeblocker.app` / `demo123` (auto-created)
+- **Sample Data**: Includes pre-populated tasks, time blocks, and schedule
+- **Features**: Full access to all application features with realistic data
 
 ## Key Implementation Notes
 
